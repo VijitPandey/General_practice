@@ -47,7 +47,44 @@ class ModelTrainer:
                 "Linear Regression": LinearRegression()
             }
 
-            model_report: dict = evaluate_models(X_train, y_train, X_test, y_test, models)
+            # write params for each model for grid searchcv
+            params = {
+                "Random Forest": {
+                    'n_estimators': [10, 50, 100],
+                    'max_depth': [None, 10, 20, 30],
+                    'min_samples_split': [2, 5, 10]
+                },
+                "Decision Tree": {
+                    'max_depth': [None, 10, 20, 30],
+                    'min_samples_split': [2, 5, 10]
+                },
+                "XGBoost": {
+                    'n_estimators': [100],
+                    'learning_rate': [0.01, 0.1],
+                    'max_depth': [3, 5, 7]
+                },
+                "CatBoost": {
+                    'iterations': [100],
+                    'depth': [6],
+                    'learning_rate': [0.1]
+                },
+                "Gradient Boosting": {
+                    'n_estimators': [100],
+                    'learning_rate': [0.01, 0.1],
+                    'max_depth': [3, 5, 7]
+                },
+                "Ada Boost": {
+                    'n_estimators': [50],
+                    'learning_rate': [1.0]
+                },
+                "KNN": {
+                    'n_neighbors': [3, 5, 7],
+                    'weights': ['uniform', 'distance']
+                },
+                "Linear Regression": {}
+            }
+
+            model_report: dict = evaluate_models(X_train, y_train, X_test, y_test, models, params)
 
             logging.info(f"Model report: {model_report}")
             best_model_score = max(sorted(model_report.values()))
